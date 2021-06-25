@@ -41,3 +41,22 @@ Object oriented design - Inheritance, abstraction, classes and interfaces: Stack
 Inconsistency: Stack extends the Vector class, which allows you to access element by index. This is inconsistent with what a Stack should actually do, which is why the Deque interface is preferred (it does not allow such operations)--its allowed operations are consistent with what a FIFO or LIFO data structure should allow.
 
 Performance: The Vector class that Stack extends is basically the "thread-safe" version of an ArrayList. The synchronizations can potentially cause a significant performance hit to your application. Also, extending other classes with unneeded functionality (as mentioned in #2) bloat your objects, potentially costing a lot of extra memory and performance overhead.
+
+
+
+One more reason to use Dequeue over Stack is Dequeue has the ability to use streams convert to list with keeping LIFO concept applied while Stack does not.
+```java
+Stack<Integer> stack = new Stack<>();
+Deque<Integer> deque = new ArrayDeque<>();
+
+stack.push(1);//1 is the top
+deque.push(1)//1 is the top
+stack.push(2);//2 is the top
+deque.push(2);//2 is the top
+
+List<Integer> list1 = stack.stream().collect(Collectors.toList());//[1,2]
+
+List<Integer> list2 = deque.stream().collect(Collectors.toList());//[2,1]
+```
+
+ref: https://stackoverflow.com/questions/12524826/why-should-i-use-deque-over-stack

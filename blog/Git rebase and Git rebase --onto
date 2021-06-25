@@ -1,0 +1,50 @@
+Git rebase and Git rebase --onto
+
+Lately I’ve been doing the Githug tutorial to improve my Git skills. I’ve learned a lot of new Git commands while solving the problems or answering to the questions that you are asked in the tutorial (some of which rather hard!)
+The toughest question I had to deal with — and which took me some time to solve — was about the command git rebase --onto. I’ve just lately started to become familiar with the command git rebase <branch> but the option --onto added to that same command has complicated things further.
+That is why I decided to learn more in depth about the command rebase --onto, but also to enhance my knowledge of the basic command git rebase as I felt it wasn’t clear enough to me, since I had to struggle so much to get the --onto option.
+How git rebase works
+In a nutshell, git rebase takes the commits of a branch and appends them to the commits of a different branch. The commits to rebase are previously saved into a temporary area and then reapplied to the new branch, one by one, in order. Let’s look at a practical example.
+In the case of two different branches below:
+
+where other_branch is based on master, we want to copy the commits of other_branch and add them after the last commit of master in order to achieve this result:
+
+other_branch now includes all the commits of master. In order to achieve this we have to use the following Git command:
+git rebase master other_branch
+or just
+git rebase master
+Both above commands lead to the same result. The only difference is that for the latter example you are in other_branch branch already, whereas in the former example Git first performs an automatic git checkout other_branch before rebasing other_branch to master. After rebasing you automatically are in other_branch branch.
+The technical syntax for the Git command rebase is:
+git rebase [<upstream>] [<branch>]  
+In case of conflict, git rebase will stop at the first problematic commit and leave conflict markers in the tree. You can use git diff to locate the markers (<<<<<<) and make edits to resolve the conflict. For each file you edit, you need to tell Git that the conflict has been resolved with the following commands:
+git add <file-name>
+git rebase --continue
+Git rebase --onto
+The syntax for Git command git rebase —-onto is:
+git rebase [--onto <new base>] [<upstream> [<branch>]]
+Let’s say we had a situation like this with three branches:
+
+branch_two is based on branch_one but we need to fork it from master. The reason for this could be, for example, that a functionality on which branch_two depends was merged into master and branch_two needs to include the commits master assimilitated after the fork.
+We need to achieve something like this:
+
+The commits of branch_two are rebased on master while the commits of branch_one stay untouched. To achieve this we use the command:
+git rebase --onto master branch_one branch_two
+Githug exercise
+The exercise from Githug that I struggled to figure out is the following:
+
+
+Reproduction of Githug problem
+other_branch is based on wrong_branch. We want to rebase it to master so that the commits of wrong_branch are not included in its commits.
+We want to achieve this:
+
+How the Githug problem should be resolved
+The Git command to solve the above Githug problem is:
+git rebase --onto master wrong_branch other_branch
+or, if you’re already in other_branch, just:
+git rebase --onto master wrong_branch
+master (aka <new base>) becomes the new base for <branch> other_branch which was previously based on wrong_branch (aka <upstream>).
+I think the reason why I was confused about this command at the beginning lies in the <upstream> part: I couldn’t figure out why I would have to put wrong_branch in the whole command syntax (as a matter of fact, what I tried to do at the beginning was something like git rebase --onto master other_branch, or the other way round.)
+The above command makes more sense now that I was able to define the concept of upstream and the part it plays in the command as a whole, although I feel I have to look more into it and understand its meaning better.
+
+
+ref: https://medium.com/@gabriellamedas/git-rebase-and-git-rebase-onto-a6a3f83f9cce

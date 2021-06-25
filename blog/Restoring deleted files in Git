@@ -1,0 +1,42 @@
+Restoring deleted files in Git
+
+Restoring deleted files in Git
+As long as you’ve committed your work in Git, actually losing a file should be quite rare. Short of deleting the entire repository directory (and not having a remote), few operations will result in a state where you’re unable to bring back a file.
+
+Let’s look at a few ways to restore a deleted file, depending on how convinced you were at the time that you really wanted the file to be deleted!
+
+I deleted a file but didn’t commit
+So you deleted a file, and immediately realized it was a mistake? This one is easy, just do:
+
+$ git checkout HEAD <filename>
+This will work regardless of whether the deletion was staged or not.
+
+I deleted a file and committed the deletion
+You made a commit deleting a file, but then realized you wanted to keep the file around after all? Do a reset to go back to the state before your commit (be careful: the "--hard" option means the command will discard changes to tracked files after the specified commit — you can also leave this option out in which case the file deletion will show up as an unstaged change along with any other changes you’ve made in your working tree. The file can then be restored as in the previous scenario):
+
+$ git reset --hard HEAD~1
+(Note: this presumes you haven’t already pushed your commit to a remote — if you have, see “I deleted a file, committed, and pushed” below.)
+
+I committed the deletion and then I did more commits
+If you deleted a file, committed, then continued work and did more commits, only to find that deleting the file was a mistake, Git still has you covered! To find the right commit, first check the history for the deleted file:
+
+$ git log -- <filename>
+You can either work with the last commit that still had the file, or the commit that deleted the file. In the first case, just checkout the file from that commit:
+
+$ git checkout <commit hash> -- <filename>
+In the second case, checkout the file from one commit before that:
+
+$ git checkout <deletion commit hash>~1 -- <filename>
+I deleted a file, committed and pushed
+If you’ve already pushed your commit or commits to a remote, resetting and pushing again will cause problems, as the history of the local repository has essentially been rewritten. In this case, it is probably better to record a new commit which undoes the work of the one deleting the file. To do this, run:
+
+$ git revert --no-commit <commit>
+Above, "<commit>" is the commit deleting the file. Following this, create your new commit as desired. The "--no-commit" option prevents the command from creating a new commit right away, instead allowing you to choose exactly which of the changes introduced in the old commit you want to revert in your new commit.
+
+Restoring deleted files in Tower
+If you’re using the Tower Git client, you’ll find the operations described above conveniently available in the GUI. Even better, in cases like committing a file deletion and then wanting to revert it, Tower’s awesome undo feature lets you get the file back by simply pressing CMD+Z!
+
+
+
+
+ref: https://www.git-tower.com/learn/git/faq/restoring-deleted-files/

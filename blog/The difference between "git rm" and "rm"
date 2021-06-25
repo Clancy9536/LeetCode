@@ -1,0 +1,47 @@
+The difference between "git rm" and "rm"
+
+
+Use git rm to delete the file, and also record the deletion operation;
+Use rm to delete the file, just delete the physical file, did not remove it from the git record.
+
+Intuitively, when a file deleted by git rm is executed by git commit -m “abc”,
+will automatically submit the operation to delete the file.
+
+For files deleted directly with the rm command, when you execute git commit -m “abc”,
+will not submit the operation to delete the file.
+But it does n’t matter, even if you have deleted a file through rm,
+You can also delete the file from the git record again through the git rm command,
+In this case, after executing git commit -m "abc", this delete operation can also be submitted.
+
+What if you accidentally deleted a large number of files with the rm command before?
+Yes, at this time, delete it again one by one with git rm.
+There is still a more convenient solution, there is no problem to submit in the following way:
+git commit -am “abc”
+
+in conclusion:
+When deleting files in a directory managed by git, you can choose the following two ways to record the deletion:
+1. rm + git commit -am “abc”
+Second, git rm + git commit -m “abc”
+In addition, git add. can only record additions and changes
+The deletion needs to be completed by git rm.
+Finally, the file deleted by rm is in not staged state,
+is a state between "unchanged" and "submitted."
+
+Below is the test chart
+First, the difference between git rm and rm
+ 
+
+Second, git add. Unable to record rm delete action
+ 
+
+3. git commit -m “abc” cannot commit rm delete action
+ 
+
+4. The role of parameter a in git commit -am “abc”
+ 
+
+Reprinted address: https://blog.csdn.net/jfkidear/article/details/12152167
+
+
+ref: https://www.programmersought.com/article/22083417293/
+
